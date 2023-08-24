@@ -36,6 +36,12 @@ $routes->resource('dashboard');
 
 // auth
 $routes->resource('auth');
+$routes->post('auth/register', 'Auth::register');
+
+// auth
+$routes->resource('account');
+$routes->post('account/ubah/(:any)', 'Account::update/$1');
+// $routes->post('auth/register', 'Auth::register');
 
 // product
 $routes->resource('product');

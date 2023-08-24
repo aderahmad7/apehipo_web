@@ -28,29 +28,29 @@ class Dashboard extends ResourceController
         return $this->respond($x);
     }
 
-    public function create()
-    {
-        $model = new DashboardModel();
-        $data = [
-            'kode' => $this->request->getVar('kode'),
-            'nama' => $this->request->getVar('nama'),
-            'jenis' => $this->request->getVar('jenis'),
-            'harga' => $this->request->getVar('harga'),
-            'stok' => $this->request->getVar('stok'),
-            'deskripsi' => $this->request->getVar('deskripsi'),
-            'foto' => $this->request->getVar('foto'),
-            'id_kebun' => $this->request->getVar('id_kebun'),
-        ];
-        $model->insertData($data);
-        $response = [
-            'status' => '201',
-            'error' => 'null',
-            'message' => [
-                'success' => 'Data produk berhasil ditambahkan'
-            ]
-        ];
-        return $this->respondCreated($response);
-    }
+    // public function create()
+    // {
+    //     $model = new DashboardModel();
+    //     $data = [
+    //         'kode' => $this->request->getVar('kode'),
+    //         'nama' => $this->request->getVar('nama'),
+    //         'jenis' => $this->request->getVar('jenis'),
+    //         'harga' => $this->request->getVar('harga'),
+    //         'stok' => $this->request->getVar('stok'),
+    //         'deskripsi' => $this->request->getVar('deskripsi'),
+    //         'foto' => $this->request->getVar('foto'),
+    //         'id_kebun' => $this->request->getVar('id_kebun'),
+    //     ];
+    //     $model->insertData($data);
+    //     $response = [
+    //         'status' => '201',
+    //         'error' => 'null',
+    //         'message' => [
+    //             'success' => 'Data produk berhasil ditambahkan'
+    //         ]
+    //     ];
+    //     return $this->respondCreated($response);
+    // }
 
     public function show($id = null)
     {
