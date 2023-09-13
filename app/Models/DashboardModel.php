@@ -10,12 +10,44 @@ class DashboardModel extends Model
     function getAllData() {
         $db = \Config\Database::connect();
         $builder = $db->table('product');
+        $builder->select('
+        product.kode AS kode, 
+        product.nama AS produk_nama, 
+        product.jenis,
+        product.harga, 
+        product.stok, 
+        product.deskripsi, 
+        product.foto AS foto_produk, 
+        product.klasifikasi, 
+        product.status, 
+        product.id_user, 
+        petani.nama AS petani_nama, 
+        petani.alamat, 
+        petani.foto AS foto_petani,
+        petani.no_rekening',
+    );
+        $builder->join('petani', 'petani.id_user = product.id_user', 'inner');
         return $builder->get()->getResult();
     }
 
     function getKlasifikasi($klasifikasi) {
         $db = \Config\Database::connect();
         $builder = $db->table('product');
+        $builder->select('
+        product.kode AS kode, 
+        product.nama AS produk_nama, 
+        product.jenis,
+        product.harga, 
+        product.stok, 
+        product.deskripsi, 
+        product.foto AS foto_produk, 
+        product.klasifikasi, 
+        product.status, 
+        product.id_user, 
+        petani.nama AS petani_nama, 
+        petani.alamat, 
+        petani.foto AS foto_petani');
+        $builder->join('petani', 'petani.id_user = product.id_user', 'inner');
         $builder->where('klasifikasi', $klasifikasi);
         // $builder->orwhere('klasifikasi', 'penjualan eksklusif');
         // $builder->orwhere('klasifikasi', 'sedang laris');

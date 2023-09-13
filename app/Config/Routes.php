@@ -48,6 +48,11 @@ $routes->resource('product');
 $routes->post('product/status/(:any)', 'Product::ubah/$1');
 $routes->post('product/ubah/(:any)', 'Product::update/$1');
 
+$routes->get('/pay', 'Payment::index');
+
+// Order
+$routes->resource('order');
+$routes->post('order/status/(:any)', 'Order::ubah/$1');
 // $routes->post('/', 'Product')
 
 /*

@@ -16,53 +16,100 @@ class Dashboard extends ResourceController
     {
         $model = new DashboardModel();
         $data = $model->getAllData();
-        $data1 = $model->getKlasifikasi("penjualan eksklusif");
-        $data2 = $model->getKlasifikasi("penjualan terbaik");
-        $data3 = $model->getKlasifikasi("sedang laris");
+        $data2 = $model->getKlasifikasi("penjualan eksklusif");
+        $data3 = $model->getKlasifikasi("penjualan terbaik");
+        $data4 = $model->getKlasifikasi("sedang laris");
+        $response = [];
+        $response2 = [];
+        $response3 = [];
+        $response4 = [];
+        foreach($data as $row) {
+            $response[] = array(
+                'kode' => $row->kode,
+                'produk_nama' => $row->produk_nama,
+                'jenis' => $row->jenis,
+                'harga' => $row->harga,
+                'stok' => $row->stok,
+                'deskripsi' => $row->deskripsi,
+                'produk_foto' => base_url('gambar/'.$row->foto_produk),
+                'klasifikasi' => $row->klasifikasi,
+                'status' => $row->status,
+                'id_user' => $row->id_user,
+                'petani_nama' => $row->petani_nama,
+                'alamat' => $row->alamat,
+                'petani_foto' =>base_url('gambar_account/'.$row->foto_petani),
+            );
+        }
+        foreach($data2 as $row) {
+            $response2[] = array(
+                'kode' => $row->kode,
+                'produk_nama' => $row->produk_nama,
+                'jenis' => $row->jenis,
+                'harga' => $row->harga,
+                'stok' => $row->stok,
+                'deskripsi' => $row->deskripsi,
+                'produk_foto' => base_url('gambar/'.$row->foto_produk),
+                'klasifikasi' => $row->klasifikasi,
+                'status' => $row->status,
+                'id_user' => $row->id_user,
+                'petani_nama' => $row->petani_nama,
+                'alamat' => $row->alamat,
+                'petani_foto' =>base_url('gambar_account/'.$row->foto_petani),
+                // 'no_rekening' =>$row->no_rekening,
+            );
+        }
+        foreach($data3 as $row) {
+            $response3[] = array(
+                'kode' => $row->kode,
+                'produk_nama' => $row->produk_nama,
+                'jenis' => $row->jenis,
+                'harga' => $row->harga,
+                'stok' => $row->stok,
+                'deskripsi' => $row->deskripsi,
+                'produk_foto' => base_url('gambar/'.$row->foto_produk),
+                'klasifikasi' => $row->klasifikasi,
+                'status' => $row->status,
+                'id_user' => $row->id_user,
+                'petani_nama' => $row->petani_nama,
+                'alamat' => $row->alamat,
+                'petani_foto' =>base_url('gambar_account/'.$row->foto_petani),
+                // 'no_rekening' =>$row->no_rekening,
+
+            );
+        }
+        foreach($data4 as $row) {
+            $response4[] = array(
+                'kode' => $row->kode,
+                'produk_nama' => $row->produk_nama,
+                'jenis' => $row->jenis,
+                'harga' => $row->harga,
+                'stok' => $row->stok,
+                'deskripsi' => $row->deskripsi,
+                'produk_foto' => base_url('gambar/'.$row->foto_produk),
+                'klasifikasi' => $row->klasifikasi,
+                'status' => $row->status,
+                'id_user' => $row->id_user,
+                'petani_nama' => $row->petani_nama,
+                'alamat' => $row->alamat,
+                'petani_foto' =>base_url('gambar_account/'.$row->foto_petani),
+                // 'no_rekening' =>$row->no_rekening,
+
+            );
+        }
         $x = [
-            'semua_produk' => $data,
-            'penjualan_eksklusif' => $data1,
-            'penjualan_terbaik' => $data2,
-            'sedang_laris' => $data3,
+            'semua_produk' => $response,
+            'penjualan_eksklusif' => $response2,
+            'penjualan_terbaik' => $response3,
+            'sedang_laris' => $response4,
         ];
         return $this->respond($x);
     }
-
-    // public function create()
-    // {
-    //     $model = new DashboardModel();
-    //     $data = [
-    //         'kode' => $this->request->getVar('kode'),
-    //         'nama' => $this->request->getVar('nama'),
-    //         'jenis' => $this->request->getVar('jenis'),
-    //         'harga' => $this->request->getVar('harga'),
-    //         'stok' => $this->request->getVar('stok'),
-    //         'deskripsi' => $this->request->getVar('deskripsi'),
-    //         'foto' => $this->request->getVar('foto'),
-    //         'id_kebun' => $this->request->getVar('id_kebun'),
-    //     ];
-    //     $model->insertData($data);
-    //     $response = [
-    //         'status' => '201',
-    //         'error' => 'null',
-    //         'message' => [
-    //             'success' => 'Data produk berhasil ditambahkan'
-    //         ]
-    //     ];
-    //     return $this->respondCreated($response);
-    // }
 
     public function show($id = null)
     {
         $model = new DashboardModel();
         $data = $model->showData($id);
         return $this->respond($data);
-        // $data = $model->where('kode_produk', $id)->first();
-        // if ($data) {
-        //     return $this->respond($data);
-        // } else {
-        //     return $this->failNotFound("Data tidak ditemukan");
-        // }
     }
 
     public function update($id = null)
@@ -81,23 +128,6 @@ class Dashboard extends ResourceController
         ];
         return $this->respondUpdated($response);
     }
-
-    // public function update($id = null)
-    // {
-    //     $model = new DashboardModel();
-    //     $data = [
-    //         'nama_produk' => $this->request->getVar('nama_produk'),
-    //     ];
-    //     $model->update($id, $data);
-    //     $response = [
-    //         'status'   => 200,
-    //         'error'    => null,
-    //         'messages' => [
-    //             'success' => 'Data produk berhasil diubah.'
-    //         ]
-    //     ];
-    //     return $this->respond($response);
-    // }
 
     public function delete($id = null)
     {

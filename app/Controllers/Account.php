@@ -18,7 +18,6 @@ class Account extends ResourceController
     {
         $model = new AccountModel();
         if($gambar = $this->request->getFile('foto')) {
-            var_dump($gambar);
             $namaGambar = $gambar->getRandomName();
             $gambar->move('gambar_account', $namaGambar);
             // unlink("/gambar_account".$this->request->getVar('fotoLama'));

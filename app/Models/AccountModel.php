@@ -31,8 +31,7 @@ final class AccountModel extends Model
             // insert ke tabel User (parent)
             $builder = $db->table('user');
             $builder->where("id_user", $id);
-            $result = $builder->update($data['user_data']);
-            var_dump($result);
+            $builder->update($data['user_data']);
             // mencari id
             $builder = $db->table('user');
             $builder->select('
@@ -46,13 +45,11 @@ final class AccountModel extends Model
             if($data['user_data']['role'] == "petani") {
                 $builder = $db->table('petani');
                 $builder->where("id", $id_child);
-               $result = $builder->update($data['petani_data']);
-               var_dump($result);
+               $builder->update($data['petani_data']);
             } else {
                 $builder = $db->table('konsumen');
                 $builder->where("id", $id_child);
                 $builder->update($data['konsumen_data']);
-                var_dump($result);
             }
             $db->transComplete();
 

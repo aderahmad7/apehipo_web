@@ -51,8 +51,7 @@ class Product extends ResourceController
         //     'data_tampil' => $response1,
         //     'data_arsip' => $response2,
         // ];
-
-        // return $this->respond($hasil);
+       echo "hello world";
     }
 
     public function create()
