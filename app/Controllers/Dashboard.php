@@ -16,13 +16,11 @@ class Dashboard extends ResourceController
     {
         $model = new DashboardModel();
         $data = $model->getAllData();
-        $data2 = $model->getKlasifikasi("penjualan eksklusif");
-        $data3 = $model->getKlasifikasi("penjualan terbaik");
-        $data4 = $model->getKlasifikasi("sedang laris");
+        $data2 = $model->getKlasifikasi("Buah");
+        $data3 = $model->getKlasifikasi("Sayuran");
         $response = [];
         $response2 = [];
         $response3 = [];
-        $response4 = [];
         foreach($data as $row) {
             $response[] = array(
                 'kode' => $row->kode,
@@ -32,12 +30,13 @@ class Dashboard extends ResourceController
                 'stok' => $row->stok,
                 'deskripsi' => $row->deskripsi,
                 'produk_foto' => base_url('gambar/'.$row->foto_produk),
-                'klasifikasi' => $row->klasifikasi,
                 'status' => $row->status,
                 'id_user' => $row->id_user,
                 'petani_nama' => $row->petani_nama,
                 'alamat' => $row->alamat,
                 'petani_foto' =>base_url('gambar_account/'.$row->foto_petani),
+                'no_telpon' =>$row->no_telpon,
+
             );
         }
         foreach($data2 as $row) {
@@ -49,13 +48,12 @@ class Dashboard extends ResourceController
                 'stok' => $row->stok,
                 'deskripsi' => $row->deskripsi,
                 'produk_foto' => base_url('gambar/'.$row->foto_produk),
-                'klasifikasi' => $row->klasifikasi,
                 'status' => $row->status,
                 'id_user' => $row->id_user,
                 'petani_nama' => $row->petani_nama,
                 'alamat' => $row->alamat,
                 'petani_foto' =>base_url('gambar_account/'.$row->foto_petani),
-                // 'no_rekening' =>$row->no_rekening,
+                'no_telpon' => $row->no_telpon,
             );
         }
         foreach($data3 as $row) {
@@ -67,18 +65,30 @@ class Dashboard extends ResourceController
                 'stok' => $row->stok,
                 'deskripsi' => $row->deskripsi,
                 'produk_foto' => base_url('gambar/'.$row->foto_produk),
-                'klasifikasi' => $row->klasifikasi,
                 'status' => $row->status,
                 'id_user' => $row->id_user,
                 'petani_nama' => $row->petani_nama,
                 'alamat' => $row->alamat,
                 'petani_foto' =>base_url('gambar_account/'.$row->foto_petani),
+                'no_telpon' =>$row->no_telpon,
                 // 'no_rekening' =>$row->no_rekening,
 
             );
         }
-        foreach($data4 as $row) {
-            $response4[] = array(
+        $x = [
+            'semua_produk' => $response,
+            'buah' => $response2,
+            'sayuran' => $response3,
+        ];
+        return $this->respond($x);
+    }
+
+    public function cari($keyword = null) {
+        $model = new DashboardModel();
+        $data = $model->searchData($keyword);
+        $response5 = [];
+        foreach($data as $row) {
+            $response5[] = array(
                 'kode' => $row->kode,
                 'produk_nama' => $row->produk_nama,
                 'jenis' => $row->jenis,
@@ -86,21 +96,16 @@ class Dashboard extends ResourceController
                 'stok' => $row->stok,
                 'deskripsi' => $row->deskripsi,
                 'produk_foto' => base_url('gambar/'.$row->foto_produk),
-                'klasifikasi' => $row->klasifikasi,
                 'status' => $row->status,
                 'id_user' => $row->id_user,
                 'petani_nama' => $row->petani_nama,
                 'alamat' => $row->alamat,
                 'petani_foto' =>base_url('gambar_account/'.$row->foto_petani),
-                // 'no_rekening' =>$row->no_rekening,
-
+                'no_telpon' =>$row->no_telpon,
             );
         }
         $x = [
-            'semua_produk' => $response,
-            'penjualan_eksklusif' => $response2,
-            'penjualan_terbaik' => $response3,
-            'sedang_laris' => $response4,
+            'produk_search' => $response5,
         ];
         return $this->respond($x);
     }

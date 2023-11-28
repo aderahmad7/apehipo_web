@@ -65,16 +65,26 @@ class Auth extends ResourceController
             
         ];
         
-        $model->doRegister($data);
-        $response = [
-            'status' => '201',
-            'error' => 'null',
-            'message' => [
-                'success' => 'Data user berhasil ditambahkan'
-            ]
-        ];
-       
-        return $this->respondCreated($response);
+        $result = $model->doRegister($data);
+        if($result) {
+            $response = [
+                'status' => '201',
+                'error' => 'null',
+                'message' => [
+                    'success' => 'Data user berhasil ditambahkan'
+                ]
+            ];
+            return $this->respondCreated($response);
+        }else {
+            $response = [
+                'status' => '404',
+                'error' => 'null',
+                'message' => [
+                    'success' => 'Data user gagal ditambahkan'
+                ]
+            ]; 
+            return $this->respondCreated($response);
+        }
 
 
     }

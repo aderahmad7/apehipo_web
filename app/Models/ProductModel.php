@@ -9,7 +9,7 @@ class ProductModel extends Model
 
     protected $table      = 'product';
     protected $primaryKey = 'kode';
-    protected $allowedFields = ['nama', 'jenis', 'harga', 'stok', 'deskripsi', 'foto', 'klasifikasi', 'status', 'id_user'];
+    protected $allowedFields = ['nama', 'jenis', 'harga', 'stok', 'deskripsi', 'foto', 'status', 'id_user'];
 
 
 
@@ -78,11 +78,4 @@ class ProductModel extends Model
         $builder->delete();
     }
 
-    // function getDataCatalog($id) {
-    //     $db = \Config\Database::connect();
-    //     $builder = $db->table('product');
-    //     $builder->join('user', 'user.id_user = product.id_user');
-    //     $builder->where('product.id_user', $id);
-    //     return $builder->get()->getResult();
-    // }
 }

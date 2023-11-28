@@ -14,44 +14,7 @@ class Product extends ResourceController
     // all users
     public function index()
     {
-        // $model = new ProductModel();
-        // $data2 = $model->getDataStatus("tampil", "U005");
-        // $data3 = $model->getDataStatus("arsip", "U005");
-        // $response1 = [];
-        // $response2 = [];
-        // foreach ($data2 as $row ) {
-        //     $response1[] = array(
-        //         'kode' => $row->kode,
-        //         'nama' => $row->nama,
-        //         'jenis' => $row->jenis,
-        //         'harga' => $row->harga,
-        //         'stok' => $row->stok,
-        //         'deskripsi' => $row->deskripsi,
-        //         'foto' => base_url('gambar/'.$row->foto),
-        //         'klasifikasi' => $row->klasifikasi,
-        //         'status' => $row->status,
-        //         'id_user' => $row->id_user
-        //     );
-        // }
-        // foreach ($data3 as $row ) {
-        //     $response2[] = array(
-        //         'kode' => $row->kode,
-        //         'nama' => $row->nama,
-        //         'jenis' => $row->jenis,
-        //         'harga' => $row->harga,
-        //         'stok' => $row->stok,
-        //         'deskripsi' => $row->deskripsi,
-        //         'foto' => base_url('gambar/'.$row->foto),
-        //         'klasifikasi' => $row->klasifikasi,
-        //         'status' => $row->status,
-        //         'id_user' => $row->id_user
-        //     );
-        // }
-        // $hasil = [
-        //     'data_tampil' => $response1,
-        //     'data_arsip' => $response2,
-        // ];
-       echo "hello world";
+        
     }
 
     public function create()
@@ -104,7 +67,6 @@ class Product extends ResourceController
                 'stok' => $row->stok,
                 'deskripsi' => $row->deskripsi,
                 'foto' => base_url('gambar/'.$row->foto),
-                'klasifikasi' => $row->klasifikasi,
                 'status' => $row->status,
                 'id_user' => $row->id_user
             );
@@ -118,7 +80,6 @@ class Product extends ResourceController
                 'stok' => $row->stok,
                 'deskripsi' => $row->deskripsi,
                 'foto' => base_url('gambar/'.$row->foto),
-                'klasifikasi' => $row->klasifikasi,
                 'status' => $row->status,
                 'id_user' => $row->id_user
             );

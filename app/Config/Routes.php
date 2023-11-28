@@ -33,6 +33,7 @@ $routes->get('/', 'Home::index');
 
 // dashboard
 $routes->resource('dashboard');
+$routes->post('dashboard/cari/(:any)', 'Dashboard::cari/$1');
 
 // auth
 $routes->resource('auth');
@@ -53,7 +54,16 @@ $routes->get('/pay', 'Payment::index');
 // Order
 $routes->resource('order');
 $routes->post('order/status/(:any)', 'Order::ubah/$1');
+$routes->post('order/bukti/(:any)', 'Order::kirimGambar/$1');
 // $routes->post('/', 'Product')
+
+// transaksi
+$routes->resource('transaksi');
+$routes->post('transaksi/status/(:any)', 'Transaksi::ubah/$1');
+
+// notifikasi
+$routes->resource('notifikasi');
+$routes->post('notifikasi/status/(:any)', 'Notifikasi::ubah/$1');
 
 /*
  * --------------------------------------------------------------------
