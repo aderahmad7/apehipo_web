@@ -94,6 +94,35 @@ class OrderModel extends Model {
         return $result;
     }
 
+    // Backend - Frontend
+    function showDataWithUsername($status) {
+        $db = \Config\Database::connect();
+        $builder = $db->table('tbl_order');
+        $builder->select('
+        detail_order.id_produk,
+        product.nama,
+        product.foto,
+        detail_order.harga,
+        detail_order.qty,
+        detail_order.id_order,
+        tbl_order.total_harga_produk,
+        tbl_order.waktu_kedaluarsa,
+        tbl_order.status,
+        tbl_order.id_user AS id_pembeli,
+        tbl_transaksi.status AS status_transaksi, 
+        tbl_order.bukti_pembayaran,
+        product.id_user AS id_penjual,
+        user.username AS username,
+        ');
+        $builder->join('detail_order', 'detail_order.id_order = tbl_order.id');
+        $builder->join('product', 'product.kode = detail_order.id_produk');
+        $builder->join('user','user.id_user = tbl_order.id_user');
+        $builder->join('tbl_transaksi', 'tbl_transaksi.id_order = tbl_order.id', "LEFT");
+        $builder->where('tbl_order.status', $status);
+        $result = $builder->get()->getResult();
+        return $result;
+    }
+
     function ubahData($id, $data) {
         $db = \Config\Database::connect();
         $builder = $db->table('tbl_order');

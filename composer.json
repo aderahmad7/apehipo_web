@@ -8,6 +8,7 @@
         "php": "^7.4 || ^8.0",
         "codeigniter4/framework": "4.3.6",
         "midtrans/midtrans-php": "^2.5",
+        "myth/auth": "^1.2",
         "nikic/php-parser": "4.16.0",
         "phpunit/phpunit": "9.6.10",
         "sebastian/global-state": "5.0.5"

@@ -1,12 +1,13 @@
-<?php 
+<?php
 
 namespace App\Models;
 
 use CodeIgniter\Model;
 
-final class AccountModel extends Model 
+final class AccountModel extends Model
 {
-    function showData($id) {
+    function showData($id)
+    {
         $db = \Config\Database::connect();
         $builder = $db->table('user');
         $builder->select('user.username, user.role, user.email,  
@@ -24,7 +25,8 @@ final class AccountModel extends Model
         return $result;
     }
 
-    function updateData($id, $data) {
+    function updateData($id, $data)
+    {
         $db = \Config\Database::connect();
         $db->transStart();
         try {
@@ -42,10 +44,10 @@ final class AccountModel extends Model
             $query = $builder->get()->getRow();
             $id_child = $query->id;
             //insert ke tabel petani (child) atau tabel konsumen (child)
-            if($data['user_data']['role'] == "petani") {
+            if ($data['user_data']['role'] == "petani") {
                 $builder = $db->table('petani');
                 $builder->where("id", $id_child);
-               $builder->update($data['petani_data']);
+                $builder->update($data['petani_data']);
             } else {
                 $builder = $db->table('konsumen');
                 $builder->where("id", $id_child);
@@ -54,41 +56,104 @@ final class AccountModel extends Model
             $db->transComplete();
 
 
-            if($db->transStatus() === false) {
-                var_dump("print");
+            if ($db->transStatus() === false) {
                 return false;
-            }else {
-                var_dump("print kah?");
+            } else {
                 return true;
             }
         } catch (\Throwable $th) {
             $db->transRollback();
             return false;
         }
-    
     }
 
-    function getLastId($user_id, $table, $select) {
+    function getLastId($user_id, $table, $select)
+    {
         $db = \Config\Database::connect();
         $builder = $db->table($table);
         $builder->select($select);
         $builder->orderBy($select, 'DESC');
         $builder->limit(1);
         $query = $builder->get();
-        if($query->getNumRows() > 0) {
+        if ($query->getNumRows() > 0) {
             $row = $query->getRow();
             return $row->$select;
-        }else {
+        } else {
             return $user_id;
         }
     }
 
-    function getNextId($lastId, $firstWord) {
+    function getNextId($lastId, $firstWord)
+    {
         $bagianNumerik = intval(substr($lastId, 1)) + 1;
         return $firstWord . str_pad($bagianNumerik, 3, '0', STR_PAD_LEFT);
     }
-    
+
+
+    // function for web development
+    function updateRoleData($id, $data)
+    {
+        $db = \Config\Database::connect();
+        if (array_key_exists('no_rekening', $data)) {
+            $builder = $db->table('petani');
+        } else {
+            $builder = $db->table('konsumen');
+        }
+        $builder->where('id', $id);
+        return $builder->update($data);
+    }
+
+    function showPetani()
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('petani');
+        $result = $builder->get()->getResult();
+        return $result;
+    }
+
+    function showKonsumen()
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('konsumen');
+        $result = $builder->get()->getResult();
+        return $result;
+    }
+
+    function deleteUser($id)
+    {
+        $db = \Config\Database::connect();
+        $db->transStart();
+        try {
+            if (substr($id, 0, 1) === 'T') {
+                $builder = $db->table('petani');
+            } else {
+                $builder = $db->table('konsumen');
+            }
+            // mencari nilai id_user pada table user
+            $builder->select('id, id_user');
+            $builder->where('id', $id);
+            $query = $builder->get()->getRow();
+            $id_user = $query->id_user;
+
+            // delete role
+            $builder->where('id', $id);
+            $hasil = $builder->delete();
+
+            // delete user
+            $builder = $db->table('user');
+            $builder->where('id_user', $id_user);
+            $hasil = $builder->delete();
+            $db->transComplete();
+
+            if ($db->transStatus() === false) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            $db->transRollback();
+            return false;
+        }
+    }
 }
-
-
-?>

@@ -16,6 +16,7 @@ class TransaksiModel extends Model
             // insert ke tabel tbl_order (parent)
             $builder = $db->table('tbl_transaksi');
             $result = $builder->insert($data['transaksi']);
+            var_dump($result);
             // insert ke tabel detail_transaksi (child)
             $builder = $db->table('detail_transaksi');
             foreach ($data['detail_transaksi'] as $item) {
@@ -29,10 +30,35 @@ class TransaksiModel extends Model
                     'id_transaksi' => $data['transaksi']['id'],
                 );
                 $result = $builder->insert($detail_produk);
-                var_dump($result);
             }
             $db->transComplete();
 
+            if ($db->transStatus() === false) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (\Throwable $th) {
+            $db->transRollback();
+            return false;
+        }
+    }
+
+    function insertDataViaAdmin($data)
+    {
+        $db = \Config\Database::connect();
+        $db->transStart();
+        try {
+            $model = new TransaksiModel();
+            // insert ke tabel tbl_order (parent)
+            $builder = $db->table('tbl_transaksi');
+            $result = $builder->insert($data['transaksi']);
+            var_dump($result);
+            // insert ke tabel detail_transaksi (child)
+            $builder = $db->table('detail_transaksi');
+            $result = $builder->insert($data['detail_transaksi']);
+            $db->transComplete();
+            var_dump($result);
             if ($db->transStatus() === false) {
                 return false;
             } else {
@@ -61,7 +87,8 @@ class TransaksiModel extends Model
         product.id_user AS id_penjual,
         tbl_transaksi.id_user AS id_pembeli,
         konsumen.alamat,
-        konsumen.no_telpon
+        konsumen.no_telpon,
+        konsumen.nama AS nama_pembeli
         ");
         $builder->join("product", "detail_transaksi.id_produk = product.kode");
         $builder->join("tbl_transaksi", "detail_transaksi.id_transaksi = tbl_transaksi.id");

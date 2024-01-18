@@ -173,7 +173,8 @@ class Order extends ResourceController
         $data = [
             'status' => $this->request->getVar('status'),
         ];
-        $model->ubahData($id, $data);
+
+        $result = $model->ubahData($id, $data);
         $response = [
             'status'   => 200,
             'error'    => null,

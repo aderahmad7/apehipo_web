@@ -29,7 +29,12 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
+$routes->get('/', 'admin::index', ['filter' => 'login']);
+
+$routes->get('/home', 'admin::index', ['filter' => 'login']);
+
+
+// API
 
 // dashboard
 $routes->resource('dashboard');
@@ -64,6 +69,25 @@ $routes->post('transaksi/status/(:any)', 'Transaksi::ubah/$1');
 // notifikasi
 $routes->resource('notifikasi');
 $routes->post('notifikasi/status/(:any)', 'Notifikasi::ubah/$1');
+
+// BACKEND - FRONTEND
+// admin - dashboard
+$routes->resource('admin', ['filter' => 'login']);
+// $routes->resource('admin');
+$routes->post('admin/status/(:any)', 'Admin::ubahStatus/$1');
+
+
+// kelola produk
+$routes->resource('kelola_produk', ['filter' => 'login']);
+$routes->post('kelola_produk/delete/(:any)', 'Kelola_produk::delete/$1');
+$routes->post('kelola_produk/ubah/(:any)', 'Kelola_produk::update/$1');
+
+
+// kelola user
+$routes->resource('kelola_user', ['filter' => 'login']);
+$routes->post('kelola_user/ubah/(:any)', 'Kelola_user::update/$1');
+$routes->post('kelola_user/delete/(:any)', 'Kelola_user::delete/$1');
+
 
 /*
  * --------------------------------------------------------------------

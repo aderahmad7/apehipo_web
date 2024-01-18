@@ -64,7 +64,8 @@ class Transaksi extends ResourceController {
                 'id_penjual' => $row->id_penjual,
                 'id_pembeli' => $row->id_pembeli,
                 'alamat' => $row->alamat,
-                'no_telpon' => $row->no_telpon
+                'no_telpon' => $row->no_telpon,
+                'nama_pembeli' => $row->nama_pembeli
             );
         }
 
@@ -82,7 +83,8 @@ class Transaksi extends ResourceController {
                 'id_penjual' => $row->id_penjual,
                 'id_pembeli' => $row->id_pembeli,
                 'alamat' => $row->alamat,
-                'no_telpon' => $row->no_telpon
+                'no_telpon' => $row->no_telpon,
+                'nama_pembeli' => $row->nama_pembeli
             );
         }
         $hasil = [

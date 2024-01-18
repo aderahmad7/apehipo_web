@@ -9,6 +9,9 @@ use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\Cors;
+use Myth\Auth\Filters\LoginFilter; // tambahkan ini
+use Myth\Auth\Filters\PermissionFilter; // tambahkan ini
+use Myth\Auth\Filters\RoleFilter; // tambahkan ini
 
 class Filters extends BaseConfig
 {
@@ -23,6 +26,9 @@ class Filters extends BaseConfig
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
         'cors'          => Cors::class,
+        'login' => LoginFilter::class, // tambahkan ini
+        'role' => RoleFilter::class, // tambahkan ini
+        'permission' => PermissionFilter::class // tambahkan ini
     ];
 
     /**
@@ -64,5 +70,7 @@ class Filters extends BaseConfig
      * Example:
      * 'isLoggedIn' => ['before' => ['account/*', 'profiles/*']]
      */
-    public array $filters = [];
+    public array $filters = [
+
+    ];
 }
