@@ -70,6 +70,27 @@ $routes->post('transaksi/status/(:any)', 'Transaksi::ubah/$1');
 $routes->resource('notifikasi');
 $routes->post('notifikasi/status/(:any)', 'Notifikasi::ubah/$1');
 
+// kelola kebun
+$routes->resource('kelola_kebun');
+
+// semai
+$routes->resource('semai');
+$routes->post('semai/createSemai/(:any)', 'Semai::createSemai/$1');
+$routes->post('semai/edit/(:any)', 'Semai::edit/$1');
+$routes->post('semai/delete/(:any)', 'Semai::delete/$1');
+$routes->post('semai/toTanam/(:any)', 'Semai::toTanam/$1');
+
+// tanam
+$routes->resource('tanam');
+$routes->post('tanam/toPanen/(:any)', 'Tanam::toPanen/$1');
+$routes->post('tanam/manage/(:any)', 'Tanam::manage/$1');
+
+// panen
+$routes->resource('panen');
+
+// report
+$routes->resource('report');
+
 // BACKEND - FRONTEND
 // admin - dashboard
 $routes->resource('admin', ['filter' => 'login']);
@@ -87,6 +108,7 @@ $routes->post('kelola_produk/ubah/(:any)', 'Kelola_produk::update/$1');
 $routes->resource('kelola_user', ['filter' => 'login']);
 $routes->post('kelola_user/ubah/(:any)', 'Kelola_user::update/$1');
 $routes->post('kelola_user/delete/(:any)', 'Kelola_user::delete/$1');
+
 
 
 /*

@@ -111,6 +111,14 @@ final class AccountModel extends Model
         return $result;
     }
 
+    function showKebun()
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('kebun');
+        $result = $builder->get()->getResult();
+        return $result;
+    }
+
     function showKonsumen()
     {
         $db = \Config\Database::connect();

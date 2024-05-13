@@ -31,7 +31,7 @@ class AuthModel extends Model
             foreach ($result as $row) {
                 $username = $row->username;
                 $email = $row->email;
-                if($data['user_data']['username'] == $username || $data['user_data']['email'] == $email) {
+                if ($data['user_data']['username'] == $username || $data['user_data']['email'] == $email) {
                     return false;
                 }
                 // Lakukan sesuatu dengan data yang Anda dapatkan
@@ -45,6 +45,9 @@ class AuthModel extends Model
             if ($data['user_data']['role'] == "petani") {
                 $builder = $db->table('petani');
                 $builder->insert($data['petani_data']);
+
+                $kebun_build = $db->table('kebun');
+                $kebun_build->insert($data['kebun_data']);
             } else {
                 $builder = $db->table('konsumen');
                 $builder->insert($data['konsumen_data']);

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\KebunModel;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\AuthModel;
 use CodeIgniter\Model;
@@ -24,8 +25,10 @@ class Auth extends ResourceController
         return $this->respond($login);
     }
 
-    public function register() {
+    public function register()
+    {
         $model = new AuthModel();
+        $kebun_model = new KebunModel();
 
         // id untuk table user
         $id_sebelumnya = $model->getLastId("U001", "user", "id_user");
@@ -34,6 +37,10 @@ class Auth extends ResourceController
         //id untuk table petani
         $id_sebelumnya = $model->getLastId("T001", "petani", "id");
         $id_petani = $model->getNextId($id_sebelumnya, "T");
+
+        //id untuk table kebun
+        $id_kebun_sebelum = $kebun_model->getLastId();
+        $id_kebun = $kebun_model->getNextId($id_kebun_sebelum);
 
         //id untuk table konsumen
         $id_sebelumnya = $model->getLastId("K001", "konsumen", "id");
@@ -55,6 +62,10 @@ class Auth extends ResourceController
                 'no_rekening' => $this->request->getVar('no_rekening'),
                 'alamat' => $this->request->getVar('alamat'),
             ],
+            'kebun_data' => [
+                'id' => $id_kebun,
+                'id_petani' => $id_petani,
+            ],
             'konsumen_data' => [
                 'id' => $id_konsumen,
                 'id_user' => $id_user,
@@ -62,11 +73,13 @@ class Auth extends ResourceController
                 'no_telpon' => $this->request->getVar('no_telpon'),
                 'alamat' => $this->request->getVar('alamat'),
             ]
-            
+
         ];
-        
+
+
+
         $result = $model->doRegister($data);
-        if($result) {
+        if ($result) {
             $response = [
                 'status' => '201',
                 'error' => 'null',
@@ -75,30 +88,31 @@ class Auth extends ResourceController
                 ]
             ];
             return $this->respondCreated($response);
-        }else {
+        } else {
             $response = [
                 'status' => '404',
                 'error' => 'null',
                 'message' => [
                     'success' => 'Data user gagal ditambahkan'
                 ]
-            ]; 
+            ];
             return $this->respondCreated($response);
         }
 
 
     }
 
-    public function show( $username = null) {
+    public function show($username = null)
+    {
         $model = new AuthModel();
-        
-       $result =  $model->show($username);
-       return $this->respond($result);
+
+        $result = $model->show($username);
+        return $this->respond($result);
     }
 
     // public function create() {
     //     $model = new AuthModel();
-        
+
     // }
 
 }
