@@ -147,4 +147,25 @@ class TanamModel extends Model
         }
     }
 
+    function searchData($key, $id_kebun)
+    {
+        // Pastikan parameter tidak null
+        if (is_null($key) || is_null($id_kebun)) {
+            return []; // Return an empty array if key or id_kebun is null
+        }
+
+
+        $db = \Config\Database::connect();
+        $build = $db->table('tanam');
+        $build->where('id_kebun', $id_kebun);
+        $build->where('status_panen', 'belum');
+
+        // LIKE 
+        $build->groupStart();
+        $build->like('nama_sayur', $key, 'both');
+        $build->orLike('jumlah_bibit', $key, 'both');
+        $build->groupEnd();
+
+        return $build->get()->getResult();
+    }
 }

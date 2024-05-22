@@ -318,4 +318,32 @@ class Semai extends ResourceController
         ];
         return $this->respondDeleted($response);
     }
+
+    public function search()
+    {
+        $keyword = $this->request->getVar('keyword');
+        $id_kebun = $this->request->getVar('id_kebun');
+
+        $semai_model = new SemaiModel();
+        $data = $semai_model->searchData($keyword, $id_kebun);
+        $response = [];
+        foreach ($data as $row) {
+            $response[] = array(
+                'id' => $row->id,
+                'id_kebun' => $row->id_kebun,
+                'gambar' => base_url('gambar_kebun/' . $row->gambar),
+                'jenis_sayur' => $row->jenis_sayur,
+                'tanggal' => $row->tanggal,
+                'jumlah' => $row->jumlah,
+                'waktu' => $row->waktu,
+                'status_tanam' => $row->status_tanam,
+            );
+        }
+
+        $hasil = [
+            'hasil_search' => $response
+        ];
+
+        return $this->response->setJSON($hasil);
+    }
 }

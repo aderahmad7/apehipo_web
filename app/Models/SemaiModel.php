@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use CodeIgniter\Database\BaseBuilder;
 
 class SemaiModel extends Model
 {
@@ -106,5 +107,29 @@ class SemaiModel extends Model
             $db->transRollback();
             return null;
         }
+    }
+
+    function searchData($key, $id_kebun)
+    {
+        // Pastikan parameter tidak null
+        if (is_null($key) || is_null($id_kebun)) {
+            return []; // Return an empty array if key or id_kebun is null
+        }
+
+
+        $db = \Config\Database::connect();
+        $build = $db->table('semai');
+        $build->where('id_kebun', $id_kebun);
+        $build->where('status_tanam', 'belum');
+
+        // LIKE 
+        $build->groupStart();
+        $build->like('jenis_sayur', $key, 'both');
+        $build->orLike('tanggal', $key, 'both');
+        $build->orLike('jumlah', $key, 'both');
+        $build->orLike('waktu', $key, 'both');
+        $build->groupEnd();
+
+        return $build->get()->getResult();
     }
 }

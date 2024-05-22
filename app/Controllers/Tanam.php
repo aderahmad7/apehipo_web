@@ -157,4 +157,34 @@ class Tanam extends BaseController
 
         return $this->response->setJSON($response);
     }
+
+    public function search()
+    {
+        $keyword = $this->request->getVar('keyword');
+        $id_kebun = $this->request->getVar('id_kebun');
+
+        $tanam_model = new TanamModel();
+        $data = $tanam_model->searchData($keyword, $id_kebun);
+        $response = [];
+        foreach ($data as $row) {
+            $response[] = array(
+                'id' => $row->id,
+                'id_kebun' => $row->id_kebun,
+                'nama_sayur' => $row->nama_sayur,
+                'gambar' => base_url('gambar_kebun/' . $row->gambar),
+                'tanggal_tanam' => $row->tanggal_tanam,
+                'jumlah_bibit' => $row->jumlah_bibit,
+                'masa_tanam' => $row->masa_tanam,
+                'jam_siram' => $row->jam_siram,
+                'keterangan' => $row->keterangan,
+                'status_panen' => $row->status_panen,
+            );
+        }
+
+        $hasil = [
+            'hasil_search' => $response
+        ];
+
+        return $this->response->setJSON($hasil);
+    }
 }
