@@ -160,8 +160,8 @@ class Tanam extends BaseController
 
     public function search()
     {
-        $keyword = $this->request->getVar('keyword');
-        $id_kebun = $this->request->getVar('id_kebun');
+        $keyword = esc($this->request->getVar('keyword'));
+        $id_kebun = esc($this->request->getVar('id_kebun'));
 
         $tanam_model = new TanamModel();
         $data = $tanam_model->searchData($keyword, $id_kebun);
