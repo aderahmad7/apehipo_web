@@ -79,13 +79,13 @@ $routes->post('semai/createSemai/(:any)', 'Semai::createSemai/$1');
 $routes->post('semai/edit/(:any)', 'Semai::edit/$1');
 $routes->post('semai/delete/(:any)', 'Semai::delete/$1');
 $routes->post('semai/toTanam/(:any)', 'Semai::toTanam/$1');
-$routes->post('semai/search/', 'Semai::search/');
+$routes->post('semai/search', 'Semai::search');
 
 // tanam
 $routes->resource('tanam');
 $routes->post('tanam/toPanen/(:any)', 'Tanam::toPanen/$1');
 $routes->post('tanam/manage/(:any)', 'Tanam::manage/$1');
-$routes->post('tanam/search/', 'Tanam::search/');
+$routes->post('tanam/search', 'Tanam::search');
 
 // panen
 $routes->resource('panen');

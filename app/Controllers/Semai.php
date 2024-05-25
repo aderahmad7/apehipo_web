@@ -137,16 +137,26 @@ class Semai extends ResourceController
         $semai_model = new SemaiModel();
         $report_model = new ReportModel();
 
+        $gambar_baru = $this->request->getFile('gambar_baru');
+
         // Validasi input
         $validation = \Config\Services::validation();
         $validation->setRules([
-            'gambar_baru' => 'uploaded[gambar_baru]|mime_in[gambar_baru,image/jpg,image/jpeg,image/png]|max_size[gambar_baru,5120]',
-            'gambar_lama' => 'required',
             'jenis_sayur' => 'required',
             'tanggal' => 'required|valid_date',
             'jumlah' => 'required|numeric',
             'waktu' => 'required|numeric',
         ]);
+
+        if ($gambar_baru != null) {
+            $validation->setRules([
+                'gambar_baru' => 'uploaded[gambar_baru]|mime_in[gambar_baru,image/jpg,image/jpeg,image/png]|max_size[gambar_baru,5120]',
+                'jenis_sayur' => 'required',
+                'tanggal' => 'required|valid_date',
+                'jumlah' => 'required|numeric',
+                'waktu' => 'required|numeric',
+            ]);
+        }
 
         if (!$validation->withRequest($this->request)->run()) {
             // Jika validasi gagal, kembalikan pesan kesalahan
@@ -160,15 +170,16 @@ class Semai extends ResourceController
             return $this->respond($response, 400);
         }
 
+
         // update
-        $gambar_baru = $this->request->getFile('gambar_baru');
+
         if ($gambar_baru) {
             $nama_gambar_baru = $gambar_baru->getRandomName();
             $gambar_baru->move('gambar_kebun', $nama_gambar_baru);
 
             // Hapus foto lama
-            if (!empty($this->request->getVar('gambar_lama'))) {
-                $path_gambar_lama = 'gambar_kebun/' . $this->request->getVar('gambar_lama');
+            if (!empty(esc($this->request->getVar('gambar_lama')))) {
+                $path_gambar_lama = 'gambar_kebun/' . esc($this->request->getVar('gambar_lama'));
                 if (file_exists($path_gambar_lama)) {
                     unlink($path_gambar_lama);
                 }
@@ -182,6 +193,7 @@ class Semai extends ResourceController
             ];
         } else {
             $data = [
+                'gambar' => esc($this->request->getVar('gambar_lama')),
                 'jenis_sayur' => esc($this->request->getVar('jenis_sayur')),
                 'tanggal' => esc($this->request->getVar('tanggal')),
                 'jumlah' => esc($this->request->getVar('jumlah')),
