@@ -64,6 +64,15 @@ class ReportModel extends Model
         return $builder->countAllResults();
     }
 
+    function getTanggalSemai($id_tanam)
+    {
+        $db = \Config\Database::connect();
+        $build = $db->table('report');
+        $build->select('tanggal_semai');
+        $build->where('id_tanam', $id_tanam);
+        return $build->get()->getResult();
+    }
+
     function getLastId()
     {
         $db = \Config\Database::connect();

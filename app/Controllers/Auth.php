@@ -38,10 +38,6 @@ class Auth extends ResourceController
         $id_sebelumnya = $model->getLastId("T001", "petani", "id");
         $id_petani = $model->getNextId($id_sebelumnya, "T");
 
-        //id untuk table kebun
-        $id_kebun_sebelum = $kebun_model->getLastId();
-        $id_kebun = $kebun_model->getNextId($id_kebun_sebelum);
-
         //id untuk table konsumen
         $id_sebelumnya = $model->getLastId("K001", "konsumen", "id");
         $id_konsumen = $model->getNextId($id_sebelumnya, "K");
@@ -61,10 +57,6 @@ class Auth extends ResourceController
                 'no_telpon' => $this->request->getVar('no_telpon'),
                 'no_rekening' => $this->request->getVar('no_rekening'),
                 'alamat' => $this->request->getVar('alamat'),
-            ],
-            'kebun_data' => [
-                'id' => $id_kebun,
-                'id_petani' => $id_petani,
             ],
             'konsumen_data' => [
                 'id' => $id_konsumen,

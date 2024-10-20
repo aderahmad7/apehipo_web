@@ -73,6 +73,20 @@ $routes->post('notifikasi/status/(:any)', 'Notifikasi::ubah/$1');
 // kelola kebun
 $routes->resource('kelola_kebun');
 
+// kebun
+$routes->resource('kebun');
+$routes->get('kebun/(:segment)', 'Kebun::show/$1');
+$routes->post('kebun/addKebun/(:any)', 'Kebun::addKebun/$1');
+$routes->post('kebun/edit/(:any)', 'Kebun::edit/$1');
+$routes->post('kebun/delete/(:any)', 'Kebun::delete/$1');
+
+// modul
+$routes->resource('modul');
+$routes->get('modul/(:segment)', 'modul::show/$1');
+$routes->post('modul/addModul/(:any)', 'modul::addModul/$1');
+$routes->post('modul/edit/(:any)', 'modul::edit/$1');
+$routes->post('modul/delete/(:any)', 'modul::delete/$1');
+
 // semai
 $routes->resource('semai');
 $routes->post('semai/createSemai/(:any)', 'Semai::createSemai/$1');
@@ -86,12 +100,26 @@ $routes->resource('tanam');
 $routes->post('tanam/toPanen/(:any)', 'Tanam::toPanen/$1');
 $routes->post('tanam/manage/(:any)', 'Tanam::manage/$1');
 $routes->post('tanam/search', 'Tanam::search');
+$routes->post('tanam/searchTgl', 'Tanam::searchTgl');
 
 // panen
 $routes->resource('panen');
 
 // report
 $routes->resource('report');
+
+// rumah
+$routes->resource('rumah');
+$routes->get('rumah/(:segment)', 'Rumah::show/$1');
+$routes->post('rumah/createRumah/(:any)', 'Rumah::createRumah/$1');
+$routes->post('rumah/edit/(:any)', 'Rumah::edit/$1');
+$routes->post('rumah/delete/(:any)', 'Rumah::delete/$1');
+
+// monitoring
+$routes->resource('monitoring');
+$routes->get('monitoring/(:segment)/(:segment)', 'Monitoring::show/$1/$2');
+$routes->post('monitoring/createMonitoring/(:any)', 'Monitoring::createMonitoring/$1');
+$routes->post('monitoring/edit/(:any)', 'Monitoring::edit/$1');
 
 // BACKEND - FRONTEND
 // admin - dashboard

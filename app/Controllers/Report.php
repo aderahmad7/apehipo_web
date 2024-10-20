@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\KebunModel;
 use App\Models\ReportModel;
+use App\Models\SemaiModel;
 
 class Report extends BaseController
 {
@@ -18,6 +19,7 @@ class Report extends BaseController
         // show pakai id_kebun
         $modelKebun = new KebunModel();
         $report_model = new ReportModel();
+        $semaiModel = new SemaiModel();
 
         $dataReport = $modelKebun->showReport($id);
 
@@ -29,6 +31,7 @@ class Report extends BaseController
                 'id_semai' => $row->id_semai,
                 'id_tanam' => $row->id_tanam,
                 'id_panen' => $row->id_panen,
+                'gambar' => base_url('gambar_kebun/' . $semaiModel->getImage($row->id_semai)[0]->gambar),
                 'nama_sayur' => $row->nama_sayur,
                 'tanggal_semai' => $row->tanggal_semai,
                 'tanggal_panen' => $row->tanggal_panen,

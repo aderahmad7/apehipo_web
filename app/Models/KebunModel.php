@@ -6,6 +6,10 @@ use CodeIgniter\Model;
 
 class KebunModel extends Model
 {
+    protected $table = 'kebun';
+    protected $primaryKey = 'id';
+    protected $allowedFields = ['id', 'id_petani', 'nama', 'alamat', 'gambar'];
+
     function getNamaPetani($id)
     {
         $db = \Config\Database::connect();
@@ -89,5 +93,10 @@ class KebunModel extends Model
             $db->transRollback();
             return null;
         }
+    }
+
+    public function getImage($id)
+    {
+        return $this->select('gambar')->where('id', $id)->first();
     }
 }

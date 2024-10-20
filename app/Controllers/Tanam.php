@@ -20,6 +20,7 @@ class Tanam extends BaseController
         // show pakai id_kebun
         $modelKebun = new KebunModel();
         $dataTanam = $modelKebun->showTanam($id);
+        $reportModel = new ReportModel();
 
         $responseTanam = [];
         foreach ($dataTanam as $row) {
@@ -28,9 +29,12 @@ class Tanam extends BaseController
                 'id_kebun' => $row->id_kebun,
                 'nama_sayur' => $row->nama_sayur,
                 'gambar' => base_url('gambar_kebun/' . $row->gambar),
+                'tanggal_semai' => $reportModel->getTanggalSemai($row->id)[0]->tanggal_semai,
                 'tanggal_tanam' => $row->tanggal_tanam,
                 'jumlah_bibit' => $row->jumlah_bibit,
                 'masa_tanam' => $row->masa_tanam,
+                'ppm' => $row->ppm,
+                'ph' => $row->ph,
                 'jam_siram' => $row->jam_siram,
                 'keterangan' => $row->keterangan,
                 'status_panen' => $row->status_panen,
@@ -119,7 +123,6 @@ class Tanam extends BaseController
         // Validasi input
         $validation = \Config\Services::validation();
         $validation->setRules([
-            'tanggal_manage' => 'required|valid_date',
             'ppm' => 'required|numeric',
             'ph' => 'required|numeric',
         ]);
@@ -136,18 +139,12 @@ class Tanam extends BaseController
             return $this->response->setJSON($response, 400);
         }
 
-        // upload
-        $id_sebelumnya = $tanam_model->getLastIdManage();
-        $id_selanjutnya = $tanam_model->getNextIdManage($id_sebelumnya);
         $data = [
-            'id' => $id_selanjutnya,
-            'id_tanaman' => $id,
-            'tanggal_manage' => esc($this->request->getVar('tanggal_manage')),
             'ppm' => esc($this->request->getVar('ppm')),
             'ph' => esc($this->request->getVar('ph')),
         ];
 
-        $tanam_model->insertManage($data);
+        $tanam_model->editManage($id, $data);
 
         $response = [
             'status' => 'success',
@@ -175,6 +172,40 @@ class Tanam extends BaseController
                 'tanggal_tanam' => $row->tanggal_tanam,
                 'jumlah_bibit' => $row->jumlah_bibit,
                 'masa_tanam' => $row->masa_tanam,
+                'ppm' => $row->ppm,
+                'ph' => $row->ph,
+                'jam_siram' => $row->jam_siram,
+                'keterangan' => $row->keterangan,
+                'status_panen' => $row->status_panen,
+            );
+        }
+
+        $hasil = [
+            'hasil_search' => $response
+        ];
+
+        return $this->response->setJSON($hasil);
+    }
+
+    public function searchTgl()
+    {
+        $tgl = esc($this->request->getVar('tanggal_tanam'));
+        $id_kebun = esc($this->request->getVar('id_kebun'));
+
+        $tanam_model = new TanamModel();
+        $data = $tanam_model->searchTgl($tgl, $id_kebun);
+        $response = [];
+        foreach ($data as $row) {
+            $response[] = array(
+                'id' => $row->id,
+                'id_kebun' => $row->id_kebun,
+                'nama_sayur' => $row->nama_sayur,
+                'gambar' => base_url('gambar_kebun/' . $row->gambar),
+                'tanggal_tanam' => $row->tanggal_tanam,
+                'jumlah_bibit' => $row->jumlah_bibit,
+                'masa_tanam' => $row->masa_tanam,
+                'ppm' => $row->ppm,
+                'ph' => $row->ph,
                 'jam_siram' => $row->jam_siram,
                 'keterangan' => $row->keterangan,
                 'status_panen' => $row->status_panen,

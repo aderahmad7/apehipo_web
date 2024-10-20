@@ -46,6 +46,15 @@ class SemaiModel extends Model
         return $build->get()->getResult();
     }
 
+    function getTanggal($id)
+    {
+        $db = \Config\Database::connect();
+        $build = $db->table('semai');
+        $build->select('tanggal_semai');
+        $build->where('id', $id);
+        return $build->get()->getResult();
+    }
+
     function getIdKebun($id)
     {
         $db = \Config\Database::connect();

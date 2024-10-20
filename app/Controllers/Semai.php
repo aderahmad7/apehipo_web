@@ -255,6 +255,7 @@ class Semai extends ResourceController
         $id_tanam = $tanam_model->getNextId($id_tanam_sebelum);
 
         $gambar = $semai_model->getImage($id)[0]->gambar;
+
         $id_kebun = $semai_model->getIdKebun($id)[0]->id_kebun;
         $nama_sayur = $semai_model->getSayur($id)[0]->jenis_sayur;
         $jam_siram = $this->request->getVar('jam_siram');
@@ -271,6 +272,8 @@ class Semai extends ResourceController
             'tanggal_tanam' => esc($this->request->getVar('tanggal_tanam')),
             'jumlah_bibit' => esc($this->request->getVar('jumlah_bibit')),
             'masa_tanam' => esc($this->request->getVar('masa_tanam')),
+            'ppm' => 0,
+            'ph' => 0,
             'jam_siram' => $jam_siram,
             'keterangan' => esc($this->request->getVar('keterangan')),
             'status_panen' => 'belum',
