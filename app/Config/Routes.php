@@ -104,6 +104,7 @@ $routes->post('tanam/searchTgl', 'Tanam::searchTgl');
 
 // panen
 $routes->resource('panen');
+$routes->post('panen/search', 'Panen::search');
 
 // report
 $routes->resource('report');

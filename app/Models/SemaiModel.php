@@ -7,6 +7,10 @@ use CodeIgniter\Database\BaseBuilder;
 
 class SemaiModel extends Model
 {
+    protected $table = 'semai';
+    protected $primaryKey = 'id';
+    protected $allowedFields = ['id', 'id_kebun', 'gambar', 'jenis_sayur', 'tanggal', 'jumlah', 'waktu', 'status_tanam'];
+
     function showData($id)
     {
         $db = \Config\Database::connect();
@@ -46,11 +50,20 @@ class SemaiModel extends Model
         return $build->get()->getResult();
     }
 
+    function getJumlah($id)
+    {
+        $db = \Config\Database::connect();
+        $build = $db->table('semai');
+        $build->select('jumlah');
+        $build->where('id', $id);
+        return $build->get()->getResult();
+    }
+
     function getTanggal($id)
     {
         $db = \Config\Database::connect();
         $build = $db->table('semai');
-        $build->select('tanggal_semai');
+        $build->select('tanggal');
         $build->where('id', $id);
         return $build->get()->getResult();
     }

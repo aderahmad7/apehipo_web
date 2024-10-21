@@ -56,7 +56,6 @@ class Semai extends ResourceController
     {
         // create pakai id_kebun
         $semai_model = new SemaiModel();
-        $report_model = new ReportModel();
 
         $id_kebun = $id;
 
@@ -102,30 +101,12 @@ class Semai extends ResourceController
         ];
         $semai_model->insertData($data);
 
-        //menambah data report
-        $id_report_sebelum = $report_model->getLastId();
-        $id_report = $report_model->getNextId($id_report_sebelum);
-        $report_data = [
-            'id' => $id_report,
-            'id_kebun' => $id_kebun,
-            'id_semai' => $id_semai,
-            'id_tanam' => '-',
-            'id_panen' => '-',
-            'nama_sayur' => esc($this->request->getVar('jenis_sayur')),
-            'tanggal_semai' => esc($this->request->getVar('tanggal')),
-            'tanggal_panen' => '0000-00-00',
-            'jumlah_semai' => esc($this->request->getVar('jumlah')),
-            'jumlah_tanam' => 0,
-            'jumlah_panen' => 0,
-        ];
-        $report_model->insertData($report_data);
-
         // response
         $response = [
             'status' => '201',
             'error' => 'null',
             'message' => [
-                'success' => 'Data berhasil ditambahkan'
+                'success' => 'Data semai berhasil ditambahkan'
             ]
         ];
         return $this->respondCreated($response);
@@ -135,7 +116,6 @@ class Semai extends ResourceController
     {
         // edit pakai id_semai
         $semai_model = new SemaiModel();
-        $report_model = new ReportModel();
 
         $gambar_baru = $this->request->getFile('gambar_baru');
 
@@ -203,20 +183,11 @@ class Semai extends ResourceController
 
         $semai_model->updateData($id, $data);
 
-        // edit data report
-        $report_data = [
-            'nama_sayur' => esc($this->request->getVar('jenis_sayur')),
-            'tanggal_semai' => esc($this->request->getVar('tanggal')),
-            'jumlah_semai' => esc($this->request->getVar('jumlah')),
-        ];
-        $report_model->updateData('id_semai', $id, $report_data);
-
-
         $response = [
             'status' => $data,
             'error' => null,
             'messages' => [
-                'success' => 'Data berhasil diubah'
+                'success' => 'Data semai berhasil diubah'
             ]
         ];
         return $this->respondUpdated($response);
@@ -227,11 +198,11 @@ class Semai extends ResourceController
         // toTanam pakai id_semai
         $semai_model = new SemaiModel();
         $tanam_model = new TanamModel();
-        $report_model = new ReportModel();
 
         // Validasi input
         $validation = \Config\Services::validation();
         $validation->setRules([
+            'id_modul' => 'required',
             'tanggal_tanam' => 'required|valid_date',
             'jumlah_bibit' => 'required|numeric',
             'masa_tanam' => 'required|numeric',
@@ -254,27 +225,22 @@ class Semai extends ResourceController
         $id_tanam_sebelum = $tanam_model->getLastId();
         $id_tanam = $tanam_model->getNextId($id_tanam_sebelum);
 
+        $tanggal_semai = $semai_model->getTanggal($id)[0]->tanggal;
         $gambar = $semai_model->getImage($id)[0]->gambar;
-
+        $jumlah = $semai_model->getJumlah($id)[0]->jumlah;
         $id_kebun = $semai_model->getIdKebun($id)[0]->id_kebun;
         $nama_sayur = $semai_model->getSayur($id)[0]->jenis_sayur;
-        $jam_siram = $this->request->getVar('jam_siram');
-        if ($jam_siram !== null) {
-            $jam_siram = esc($jam_siram);
-        } else {
-            $jam_siram = null;
-        }
         $data = [
             'id' => $id_tanam,
             'id_kebun' => $id_kebun,
+            'id_modul' => esc($this->request->getVar('id_modul')),
             'nama_sayur' => $nama_sayur,
             'gambar' => $gambar,
+            'tanggal_semai' => $tanggal_semai,
             'tanggal_tanam' => esc($this->request->getVar('tanggal_tanam')),
+            'jumlah_semai' => $jumlah,
             'jumlah_bibit' => esc($this->request->getVar('jumlah_bibit')),
             'masa_tanam' => esc($this->request->getVar('masa_tanam')),
-            'ppm' => 0,
-            'ph' => 0,
-            'jam_siram' => $jam_siram,
             'keterangan' => esc($this->request->getVar('keterangan')),
             'status_panen' => 'belum',
         ];
@@ -286,17 +252,9 @@ class Semai extends ResourceController
         ];
         $semai_model->updateData($id, $data2);
 
-        // edit report
-        $report_data = [
-            'id_tanam' => $id_tanam,
-            'jumlah_tanam' => esc($this->request->getVar('jumlah_bibit')),
-        ];
-        $report_model->updateData('id_semai', $id, $report_data);
-
-
         $response = [
             'status' => 'success',
-            'message' => 'Data berhasil dipindah ke status tanam.'
+            'message' => 'Data semai berhasil dipindah ke status tanam.'
         ];
 
         return $this->response->setJSON($response);
@@ -311,7 +269,6 @@ class Semai extends ResourceController
     {
         // delete pakai id_semai
         $semai_model = new SemaiModel();
-        $report_model = new ReportModel();
 
         // hapus gambar
         $path = 'gambar_kebun/' . $semai_model->getImage($id)[0]->gambar;
@@ -320,9 +277,6 @@ class Semai extends ResourceController
         }
 
         $semai_model->deleteData($id);
-
-        // delete report
-        $report_model->deleteData('id_semai', $id);
 
         $response = [
             'status' => 200,
@@ -354,6 +308,7 @@ class Semai extends ResourceController
                 'status_tanam' => $row->status_tanam,
             );
         }
+        
 
         $hasil = [
             'hasil_search' => $response

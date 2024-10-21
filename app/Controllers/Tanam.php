@@ -17,27 +17,25 @@ class Tanam extends BaseController
 
     public function show($id = null)
     {
-        // show pakai id_kebun
-        $modelKebun = new KebunModel();
-        $dataTanam = $modelKebun->showTanam($id);
-        $reportModel = new ReportModel();
+        // show pakai id_modul
+        $tanamModel = new TanamModel();
+        $dataTanam = $tanamModel->where('id_modul', $id)->where('status_panen', 'belum')->findAll();
 
         $responseTanam = [];
         foreach ($dataTanam as $row) {
             $responseTanam[] = [
-                'id' => $row->id,
-                'id_kebun' => $row->id_kebun,
-                'nama_sayur' => $row->nama_sayur,
-                'gambar' => base_url('gambar_kebun/' . $row->gambar),
-                'tanggal_semai' => $reportModel->getTanggalSemai($row->id)[0]->tanggal_semai,
-                'tanggal_tanam' => $row->tanggal_tanam,
-                'jumlah_bibit' => $row->jumlah_bibit,
-                'masa_tanam' => $row->masa_tanam,
-                'ppm' => $row->ppm,
-                'ph' => $row->ph,
-                'jam_siram' => $row->jam_siram,
-                'keterangan' => $row->keterangan,
-                'status_panen' => $row->status_panen,
+                'id' => $row['id'],
+                'id_kebun' => $row['id_kebun'],
+                'id_modul' => $row['id_modul'],
+                'nama_sayur' => $row['nama_sayur'],
+                'gambar' => base_url('gambar_kebun/' . $row['gambar']),
+                'tanggal_semai' => $row['tanggal_semai'],
+                'tanggal_tanam' => $row['tanggal_tanam'],
+                'jumlah_semai' => $row['jumlah_semai'],
+                'jumlah_bibit' => $row['jumlah_bibit'],
+                'masa_tanam' => $row['masa_tanam'],
+                'keterangan' => $row['keterangan'],
+                'status_panen' => $row['status_panen'],
             ];
         }
 
@@ -54,7 +52,6 @@ class Tanam extends BaseController
         // toPanen pakai id_tanam
         $tanam_model = new TanamModel();
         $panen_model = new PanenModel();
-        $report_model = new ReportModel();
 
         $id_panen_sebelum = $panen_model->getLastId();
         $id_panen = $panen_model->getNextId($id_panen_sebelum);
@@ -82,13 +79,23 @@ class Tanam extends BaseController
         // upload
         $gambar = $tanam_model->getImage($id)[0]->gambar;
         $id_kebun = $tanam_model->getIdKebun($id)[0]->id_kebun;
+        $tanggal_semai = $tanam_model->getTglSemai($id)[0]->tanggal_semai;
+        $tanggal_tanam = $tanam_model->getTglTanam($id)[0]->tanggal_tanam;
+        $jumlah_semai = $tanam_model->getJumSemai($id)[0]->jumlah_semai;
+        $jumlah_tanam = $tanam_model->getJumTanam($id)[0]->jumlah_bibit;
+        $id_modul = $tanam_model->getIdModul($id)[0]->id_modul;
         $nama_sayur = $tanam_model->getSayur($id)[0]->nama_sayur;
         $data = [
             'id' => $id_panen,
             'id_kebun' => $id_kebun,
+            'id_modul' => $id_modul,
             'nama_sayur' => $nama_sayur,
             'gambar' => $gambar,
+            'tanggal_semai' => $tanggal_semai,
+            'tanggal_tanam' => $tanggal_tanam,
             'tanggal_panen' => esc($this->request->getVar('tanggal_panen')),
+            'jumlah_semai' => $jumlah_semai,
+            'jumlah_tanam' => $jumlah_tanam,
             'jumlah_panen' => esc($this->request->getVar('jumlah_panen')),
             'keterangan' => esc($this->request->getVar('keterangan')),
         ];
@@ -100,56 +107,9 @@ class Tanam extends BaseController
         ];
         $tanam_model->updateData($id, $data2);
 
-        // update data report
-        $report_data = [
-            'id_panen' => $id_panen,
-            'tanggal_panen' => esc($this->request->getVar('tanggal_panen')),
-            'jumlah_panen' => esc($this->request->getVar('jumlah_panen')),
-        ];
-        $report_model->updateData('id_tanam', $id, $report_data);
-
         $response = [
             'status' => 'success',
-            'message' => 'Data berhasil dipindah ke status panen.'
-        ];
-
-        return $this->response->setJSON($response);
-    }
-
-    public function manage($id)
-    {
-        $tanam_model = new TanamModel();
-
-        // Validasi input
-        $validation = \Config\Services::validation();
-        $validation->setRules([
-            'ppm' => 'required|numeric',
-            'ph' => 'required|numeric',
-        ]);
-
-        if (!$validation->withRequest($this->request)->run()) {
-            // Jika validasi gagal, kembalikan pesan kesalahan
-            $response = [
-                'status' => '400',
-                'error' => $validation->getErrors(),
-                'message' => [
-                    'failed' => 'Data tidak valid'
-                ]
-            ];
-            return $this->response->setJSON($response, 400);
-        }
-
-        $data = [
-            'ppm' => esc($this->request->getVar('ppm')),
-            'ph' => esc($this->request->getVar('ph')),
-        ];
-
-        $tanam_model->editManage($id, $data);
-
-        $response = [
-            'status' => 'success',
-            'data' => $data,
-            'message' => 'Monitoring tanaman berhasil.'
+            'message' => 'Data tanam berhasil dipindah ke status panen.'
         ];
 
         return $this->response->setJSON($response);
@@ -158,23 +118,23 @@ class Tanam extends BaseController
     public function search()
     {
         $keyword = esc($this->request->getVar('keyword'));
-        $id_kebun = esc($this->request->getVar('id_kebun'));
+        $id_modul = esc($this->request->getVar('id_modul'));
 
         $tanam_model = new TanamModel();
-        $data = $tanam_model->searchData($keyword, $id_kebun);
+        $data = $tanam_model->searchData($keyword, $id_modul);
         $response = [];
         foreach ($data as $row) {
             $response[] = array(
                 'id' => $row->id,
                 'id_kebun' => $row->id_kebun,
+                'id_modul' => $row->id_modul,
                 'nama_sayur' => $row->nama_sayur,
                 'gambar' => base_url('gambar_kebun/' . $row->gambar),
+                'tanggal_semai' => $row->tanggal_semai,
                 'tanggal_tanam' => $row->tanggal_tanam,
+                'jumlah_semai' => $row->jumlah_semai,
                 'jumlah_bibit' => $row->jumlah_bibit,
                 'masa_tanam' => $row->masa_tanam,
-                'ppm' => $row->ppm,
-                'ph' => $row->ph,
-                'jam_siram' => $row->jam_siram,
                 'keterangan' => $row->keterangan,
                 'status_panen' => $row->status_panen,
             );
